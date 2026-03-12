@@ -6,95 +6,213 @@
 <style>
 
 body{
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     text-align:center;
-    background:#f2f2f2;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
 }
 
 h1{
     margin-top:20px;
 }
 
+.controls{
+    margin:20px;
+}
+
+select,button{
+    padding:8px 12px;
+    font-size:15px;
+    border:none;
+    border-radius:6px;
+    margin:5px;
+}
+
+button{
+    background:#00c9a7;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00a78a;
+}
+
+.stats{
+    margin-top:10px;
+    font-size:18px;
+}
+
 .game{
     display:flex;
     justify-content:center;
     gap:80px;
-    margin-top:60px;
+    margin-top:40px;
 }
 
 .tower{
-    width:120px;
-    height:250px;
-    border:3px solid black;
+    width:140px;
+    height:260px;
+    border:4px solid white;
     border-radius:10px;
     display:flex;
     flex-direction:column-reverse;
     align-items:center;
     padding-bottom:10px;
-    background:white;
+    background:rgba(255,255,255,0.1);
 }
 
 .disk{
-    height:25px;
-    margin:4px;
+    height:22px;
+    margin:3px;
     border-radius:6px;
     cursor:grab;
+    color:white;
+    font-size:12px;
 }
 
-.disk1{ width:60px; background:#ff6b6b; }
-.disk2{ width:80px; background:#4ecdc4; }
-.disk3{ width:100px; background:#1a73e8; }
-
 </style>
-
 </head>
 
 <body>
 
-<h1>Tower of Hanoi</h1>
-<p>Move all disks to the last tower</p>
+<h1>Tower of Hanoi Game</h1>
+
+<div class="controls">
+
+<label>Number of Disks:</label>
+
+<select id="diskSelect">
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+</select>
+
+<button onclick="startGame()">Start Game</button>
+
+</div>
+
+<div class="stats">
+Steps: <span id="steps">0</span> |
+Time: <span id="timer">0</span> sec
+</div>
 
 <div class="game">
 
-<div class="tower" id="tower1">
-<div class="disk disk3" draggable="true"></div>
-<div class="disk disk2" draggable="true"></div>
-<div class="disk disk1" draggable="true"></div>
-</div>
-
+<div class="tower" id="tower1"></div>
 <div class="tower" id="tower2"></div>
-
 <div class="tower" id="tower3"></div>
 
 </div>
 
 <script>
 
-let draggedDisk = null;
+let draggedDisk=null
+let steps=0
+let timer=0
+let timerInterval=null
+let gameStarted=false
+let totalDisks=3
 
-document.querySelectorAll(".disk").forEach(disk=>{
-    disk.addEventListener("dragstart", function(){
-        draggedDisk = this;
-    });
-});
+function startGame(){
+
+clearInterval(timerInterval)
+timer=0
+steps=0
+gameStarted=false
+
+document.getElementById("timer").innerText=0
+document.getElementById("steps").innerText=0
+
+document.querySelectorAll(".tower").forEach(t=>t.innerHTML="")
+
+totalDisks=parseInt(document.getElementById("diskSelect").value)
+
+let tower1=document.getElementById("tower1")
+
+for(let i=totalDisks;i>=1;i--){
+
+let disk=document.createElement("div")
+
+disk.classList.add("disk")
+
+disk.style.width=(40+i*20)+"px"
+disk.style.background=`hsl(${i*40},70%,60%)`
+disk.innerText=i
+
+disk.draggable=true
+
+disk.addEventListener("dragstart",function(){
+draggedDisk=this
+})
+
+tower1.appendChild(disk)
+
+}
+
+}
 
 document.querySelectorAll(".tower").forEach(tower=>{
 
-    tower.addEventListener("dragover", function(e){
-        e.preventDefault();
-    });
+tower.addEventListener("dragover",function(e){
+e.preventDefault()
+})
 
-    tower.addEventListener("drop", function(){
+tower.addEventListener("drop",function(){
 
-        let topDisk = this.lastElementChild;
+if(!draggedDisk) return
 
-        if(!topDisk || topDisk.offsetWidth > draggedDisk.offsetWidth){
-            this.appendChild(draggedDisk);
-        }
+let topDisk=this.lastElementChild
 
-    });
+if(!topDisk || topDisk.offsetWidth>draggedDisk.offsetWidth){
 
-});
+this.appendChild(draggedDisk)
+
+steps++
+document.getElementById("steps").innerText=steps
+
+if(!gameStarted){
+startTimer()
+gameStarted=true
+}
+
+checkWin()
+
+}
+
+})
+
+})
+
+function startTimer(){
+
+timerInterval=setInterval(()=>{
+
+timer++
+document.getElementById("timer").innerText=timer
+
+},1000)
+
+}
+
+function checkWin(){
+
+let tower3=document.getElementById("tower3")
+
+if(tower3.children.length==totalDisks){
+
+clearInterval(timerInterval)
+
+setTimeout(()=>{
+alert("🎉 You solved the puzzle!\nSteps: "+steps+"\nTime: "+timer+" seconds")
+},200)
+
+}
+
+}
+
+startGame()
 
 </script>
 
