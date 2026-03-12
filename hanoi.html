@@ -204,9 +204,7 @@ if(tower3.children.length==totalDisks){
 
 clearInterval(timerInterval)
 
-setTimeout(()=>{
-alert("🎉 You solved the puzzle!\nSteps: "+steps+"\nTime: "+timer+" seconds")
-},200)
+window.location.href="result.html?steps="+steps+"&time="+timer
 
 }
 

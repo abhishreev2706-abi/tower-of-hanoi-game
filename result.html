@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Game Result</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    text-align:center;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.result-box{
+    background:white;
+    color:black;
+    padding:40px;
+    border-radius:12px;
+    box-shadow:0px 10px 20px rgba(0,0,0,0.3);
+    width:300px;
+}
+
+h1{
+    color:green;
+}
+
+button{
+    padding:10px 20px;
+    margin-top:20px;
+    border:none;
+    border-radius:6px;
+    background:#667eea;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#4b5bdc;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="result-box">
+
+<h1>🎉 Puzzle Completed!</h1>
+
+<p><b>Steps:</b> <span id="steps"></span></p>
+<p><b>Time:</b> <span id="time"></span> seconds</p>
+
+<button onclick="playAgain()">Play Again</button>
+
+</div>
+
+<script>
+
+let params=new URLSearchParams(window.location.search)
+
+document.getElementById("steps").innerText=params.get("steps")
+document.getElementById("time").innerText=params.get("time")
+
+function playAgain(){
+window.location.href="hanoi.html"
+}
+
+</script>
+
+</body>
+</html>
