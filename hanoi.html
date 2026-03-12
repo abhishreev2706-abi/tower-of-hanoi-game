@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tower of Hanoi Game</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#f2f2f2;
+}
+
+h1{
+    margin-top:20px;
+}
+
+.game{
+    display:flex;
+    justify-content:center;
+    gap:80px;
+    margin-top:60px;
+}
+
+.tower{
+    width:120px;
+    height:250px;
+    border:3px solid black;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column-reverse;
+    align-items:center;
+    padding-bottom:10px;
+    background:white;
+}
+
+.disk{
+    height:25px;
+    margin:4px;
+    border-radius:6px;
+    cursor:grab;
+}
+
+.disk1{ width:60px; background:#ff6b6b; }
+.disk2{ width:80px; background:#4ecdc4; }
+.disk3{ width:100px; background:#1a73e8; }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Tower of Hanoi</h1>
+<p>Move all disks to the last tower</p>
+
+<div class="game">
+
+<div class="tower" id="tower1">
+<div class="disk disk3" draggable="true"></div>
+<div class="disk disk2" draggable="true"></div>
+<div class="disk disk1" draggable="true"></div>
+</div>
+
+<div class="tower" id="tower2"></div>
+
+<div class="tower" id="tower3"></div>
+
+</div>
+
+<script>
+
+let draggedDisk = null;
+
+document.querySelectorAll(".disk").forEach(disk=>{
+    disk.addEventListener("dragstart", function(){
+        draggedDisk = this;
+    });
+});
+
+document.querySelectorAll(".tower").forEach(tower=>{
+
+    tower.addEventListener("dragover", function(e){
+        e.preventDefault();
+    });
+
+    tower.addEventListener("drop", function(){
+
+        let topDisk = this.lastElementChild;
+
+        if(!topDisk || topDisk.offsetWidth > draggedDisk.offsetWidth){
+            this.appendChild(draggedDisk);
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
